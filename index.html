@@ -124,10 +124,10 @@
           alt="LexiMark watermark-and-MIA workflow with key highlights"
           style="max-width:100%; height:auto;">
     </figure>
-      <h2 class="subtitle has-text-centered">
+      <!-- <h2 class="subtitle has-text-centered">
         <span class="dnerf">LexiMark</span> embeds high-entropy synonym substitutions that LLMs memorize&nbsp;—
         enabling reliable post-training membership verification without harming semantics.
-      </h2>
+      </h2> -->
     </div>
   </div>
 </section>
@@ -153,20 +153,28 @@
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
-          <p>Large language models (LLMs) can be trained or fine-tuned on data obtained
-             without the owner’s consent. Verifying whether a specific LLM was trained on
-             particular data instances or an entire dataset is challenging. We present
-             <strong>LexiMark</strong>, a watermarking technique that replaces the top-K highest-entropy
-             words in each sentence with semantically appropriate synonyms of even higher
-             entropy. These subtle substitutions encourage memorization without degrading
-             text quality, enabling powerful <em>black-box</em> membership-inference attacks
-             post-training.</p>
-          <p>Across six datasets (BookMIA and five subsets of&nbsp;<em>The&nbsp;Pile</em>) and seven open-source
-             LLMs ranging from 160 M to 8 B parameters, LexiMark boosts AUROC by
-             2.5 – 25 pp over existing methods, preserves meaning
-             (≥ 0.95 cosine similarity on SBERT embeddings) and remains robust to synonym
-             removal, post-training adaptation and instruction-tuning.</p>
-        </div>
+          <p>
+            Large language models (LLMs) can be trained or fine-tuned on data obtained without the owner’s consent.
+            Verifying whether a specific LLM was trained on particular data instances—or on an entire dataset—is
+            extremely challenging. <em>Dataset watermarking</em> addresses this by embedding identifiable modifications
+            in training data to detect unauthorized use. However, existing methods often lack stealth, making them
+            relatively easy to detect and remove.
+          </p>
+
+          <p>
+            We propose <strong>LexiMark</strong>, a novel watermarking technique for text and documents that embeds synonym
+            substitutions for carefully selected high-entropy words. The substitutions boost an LLM’s memorization of
+            the watermarked text without altering its semantic integrity. Consequently, the watermark blends
+            seamlessly into the text—no visible markers—while remaining resistant to automated or manual removal.
+          </p>
+
+          <p>
+            We evaluate LexiMark on baseline datasets from recent studies and seven open-source models:
+            LLaMA-1&nbsp;7B, LLaMA-3&nbsp;8B, Mistral&nbsp;7B, Pythia&nbsp;6.9B, and three smaller Pythia variants
+            (160 M, 410 M, 1 B). Our experiments cover continued-pretraining and fine-tuning scenarios. LexiMark
+            consistently boosts AUROC scores over prior methods, demonstrating its effectiveness in reliably detecting
+            whether unauthorized watermarked data was used during LLM training.
+          </p>        </div>
       </div>
     </div>
   </div>
@@ -199,42 +207,289 @@
 </section>
 
 <!-- ░░░ Results tables ░░░ -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-full-width has-text-centered">
-        <h2 class="title is-3">Fine-tuned Models — BookMIA</h2>
-        <figure class="image">
-          <!-- Replace with your real table/figure -->
-          <img src="./static/images/bookmia_results_placeholder.png" alt="BookMIA results">
-        </figure>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section class="section">
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width has-text-centered">
-        <h2 class="title is-3">Continued Pretraining — The Pile Subsets</h2>
-        <figure class="image">
-          <img src="./static/images/pile_results_placeholder.png" alt="The Pile results">
-        </figure>
+        <h2 class="title is-3">Fine-tune LLMs</h2>
+<table class="table is-striped is-hoverable is-fullwidth">
+  <caption class="has-text-weight-semibold">
+    Comparison of watermarking and non-watermarking methods on various datasets and models
+    (AUROC / TPR&nbsp;@&nbsp;FPR = 5&nbsp;%).<br>
+    <em>k = 5</em>, concatenation synonym selection, Min-K++ 20 % MIA.
+    Bold values indicate the best score for each dataset–model pair.
+  </caption>
+
+  <!-- Column headers -->
+  <thead>
+    <tr>
+      <th rowspan="2">Dataset</th>
+      <th rowspan="2">Metric</th>
+      <th colspan="2">Pythia&nbsp;6.9 B</th>
+      <th colspan="2">LLaMA-1&nbsp;7 B</th>
+      <th colspan="2">LLaMA-3&nbsp;8 B</th>
+      <th colspan="2">Mistral&nbsp;7 B</th>
+    </tr>
+    <tr>
+      <th>None</th><th>LexiMark</th>
+      <th>None</th><th>LexiMark</th>
+      <th>None</th><th>LexiMark</th>
+      <th>None</th><th>LexiMark</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <!-- BookMIA -->
+    <tr>
+      <td rowspan="2">BookMIA</td>
+      <td>AUROC</td>
+      <td>69.1</td><td><strong>94.8</strong></td>
+      <td>73.2</td><td><strong>95.9</strong></td>
+      <td>79.0</td><td><strong>96.9</strong></td>
+      <td>84.7</td><td><strong>96.7</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5&nbsp;%&nbsp;FPR</td>
+      <td>13.5</td><td><strong>79.1</strong></td>
+      <td>18.3</td><td><strong>84.3</strong></td>
+      <td>24.3</td><td><strong>84.4</strong></td>
+      <td>30.2</td><td><strong>90.9</strong></td>
+    </tr>
+
+    <!-- Enron Emails -->
+    <tr>
+      <td rowspan="2">Enron Emails</td>
+      <td>AUROC</td>
+      <td>65.6</td><td><strong>72.3</strong></td>
+      <td>65.6</td><td><strong>69.8</strong></td>
+      <td>71.3</td><td><strong>75.3</strong></td>
+      <td>78.1</td><td><strong>81.6</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5&nbsp;%&nbsp;FPR</td>
+      <td>11.0</td><td><strong>23.8</strong></td>
+      <td>11.0</td><td><strong>19.4</strong></td>
+      <td>12.4</td><td><strong>21.3</strong></td>
+      <td>27.7</td><td><strong>31.2</strong></td>
+    </tr>
+
+    <!-- PubMed Abstracts -->
+    <tr>
+      <td rowspan="2">PubMed Abstracts</td>
+      <td>AUROC</td>
+      <td>68.7</td><td><strong>76.0</strong></td>
+      <td>72.2</td><td><strong>80.7</strong></td>
+      <td>78.4</td><td><strong>83.3</strong></td>
+      <td>83.8</td><td><strong>88.7</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5&nbsp;%&nbsp;FPR</td>
+      <td>17.9</td><td><strong>25.0</strong></td>
+      <td>23.6</td><td><strong>35.0</strong></td>
+      <td>35.4</td><td><strong>41.5</strong></td>
+      <td>48.4</td><td><strong>58.4</strong></td>
+    </tr>
+
+    <!-- Wikipedia (en) -->
+    <tr>
+      <td rowspan="2">Wikipedia&nbsp;(en)</td>
+      <td>AUROC</td>
+      <td>65.5</td><td><strong>74.5</strong></td>
+      <td>63.1</td><td><strong>73.0</strong></td>
+      <td>70.8</td><td><strong>78.9</strong></td>
+      <td>77.2</td><td><strong>84.6</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5&nbsp;%&nbsp;FPR</td>
+      <td>10.2</td><td><strong>16.6</strong></td>
+      <td>12.4</td><td><strong>19.7</strong></td>
+      <td>14.2</td><td><strong>22.8</strong></td>
+      <td>18.1</td><td><strong>31.7</strong></td>
+    </tr>
+
+    <!-- PILE-FreeLaw -->
+    <tr>
+      <td rowspan="2">PILE&nbsp;– FreeLaw</td>
+      <td>AUROC</td>
+      <td>67.7</td><td><strong>83.3</strong></td>
+      <td>57.2</td><td><strong>61.6</strong></td>
+      <td>70.9</td><td><strong>87.0</strong></td>
+      <td>80.1</td><td><strong>92.0</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5&nbsp;%&nbsp;FPR</td>
+      <td>10.0</td><td><strong>37.0</strong></td>
+      <td>9.8 </td><td><strong>23.7</strong></td>
+      <td>11.8</td><td><strong>42.6</strong></td>
+      <td>18.5</td><td><strong>67.1</strong></td>
+    </tr>
+
+    <!-- USPTO Backgrounds -->
+    <tr>
+      <td rowspan="2">USPTO Backgrounds</td>
+      <td>AUROC</td>
+      <td>63.4</td><td><strong>76.1</strong></td>
+      <td>65.0</td><td><strong>78.5</strong></td>
+      <td>72.4</td><td><strong>82.5</strong></td>
+      <td>82.0</td><td><strong>89.8</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5&nbsp;%&nbsp;FPR</td>
+      <td>9.2 </td><td><strong>22.7</strong></td>
+      <td>14.5</td><td><strong>28.3</strong></td>
+      <td>21.1</td><td><strong>35.2</strong></td>
+      <td>39.6</td><td><strong>60.6</strong></td>
+    </tr>
+  </tbody>
+</table>
       </div>
     </div>
   </div>
 </section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width has-text-centered">
+        <h2 class="title is-3">Continued Pretraining</h2>
+<!-- ░░░ Fine-tuned models results table ░░░ -->
+<table class="table is-striped is-hoverable is-fullwidth">
+  <caption class="has-text-weight-semibold">
+    Comparison of watermarking and non-watermarking methods on various datasets and models
+    (AUROC / TPR&nbsp;@&nbsp;FPR = 5 %).<br>
+    <em>k = 5</em>, concatenation-based synonym selection, Min-K++ 20 % MIA.
+    Bold values mark the best score per dataset–model pair.
+  </caption>
+
+  <!-- Column headers -->
+  <thead>
+    <tr>
+      <th rowspan="2">Dataset</th>
+      <th rowspan="2">Metric</th>
+      <th colspan="2">Pythia&nbsp;160 M</th>
+      <th colspan="2">Pythia&nbsp;410 M</th>
+      <th colspan="2">Pythia&nbsp;1 B</th>
+    </tr>
+    <tr>
+      <th>None</th><th>LexiMark</th>
+      <th>None</th><th>LexiMark</th>
+      <th>None</th><th>LexiMark</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <!-- BookMIA -->
+    <tr>
+      <td rowspan="2">BookMIA</td>
+      <td>AUROC</td>
+      <td>77.5</td><td><strong>95.0</strong></td>
+      <td>87.3</td><td><strong>97.0</strong></td>
+      <td>88.1</td><td><strong>96.2</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5 % FPR</td>
+      <td>18.0</td><td><strong>89.5</strong></td>
+      <td>25.0</td><td><strong>95.9</strong></td>
+      <td>24.5</td><td><strong>95.0</strong></td>
+    </tr>
+
+    <!-- Enron Emails -->
+    <tr>
+      <td rowspan="2">Enron Emails</td>
+      <td>AUROC</td>
+      <td>79.1</td><td><strong>85.2</strong></td>
+      <td>84.6</td><td><strong>87.6</strong></td>
+      <td>85.8</td><td><strong>89.0</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5 % FPR</td>
+      <td>26.8</td><td><strong>51.3</strong></td>
+      <td>31.0</td><td><strong>59.2</strong></td>
+      <td>48.0</td><td><strong>68.4</strong></td>
+    </tr>
+
+    <!-- PubMed Abstracts -->
+    <tr>
+      <td rowspan="2">PubMed Abstracts</td>
+      <td>AUROC</td>
+      <td>69.9</td><td><strong>77.9</strong></td>
+      <td>86.5</td><td><strong>89.0</strong></td>
+      <td>93.8</td><td><strong>96.5</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5 % FPR</td>
+      <td>17.9</td><td><strong>26.8</strong></td>
+      <td>52.9</td><td><strong>60.2</strong></td>
+      <td>82.7</td><td><strong>89.8</strong></td>
+    </tr>
+
+    <!-- Wikipedia -->
+    <tr>
+      <td rowspan="2">Wikipedia&nbsp;(en)</td>
+      <td>AUROC</td>
+      <td>68.4</td><td><strong>74.5</strong></td>
+      <td>76.8</td><td><strong>84.5</strong></td>
+      <td>80.2</td><td><strong>87.9</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5 % FPR</td>
+      <td>10.0</td><td><strong>17.0</strong></td>
+      <td>18.1</td><td><strong>37.9</strong></td>
+      <td>33.4</td><td><strong>57.1</strong></td>
+    </tr>
+
+    <!-- PILE-FreeLaw -->
+    <tr>
+      <td rowspan="2">PILE - FreeLaw</td>
+      <td>AUROC</td>
+      <td>67.2</td><td><strong>79.8</strong></td>
+      <td>73.9</td><td><strong>87.1</strong></td>
+      <td>78.1</td><td><strong>91.4</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5 % FPR</td>
+      <td>13.5</td><td><strong>34.5</strong></td>
+      <td>18.8</td><td><strong>46.9</strong></td>
+      <td>23.4</td><td><strong>64.3</strong></td>
+    </tr>
+
+    <!-- USPTO Backgrounds -->
+    <tr>
+      <td rowspan="2">USPTO Backgrounds</td>
+      <td>AUROC</td>
+      <td>69.5</td><td><strong>79.4</strong></td>
+      <td>80.5</td><td><strong>89.8</strong></td>
+      <td>83.5</td><td><strong>92.0</strong></td>
+    </tr>
+    <tr>
+      <td>TPR&nbsp;@&nbsp;5 % FPR</td>
+      <td>17.4</td><td><strong>29.5</strong></td>
+      <td>41.5</td><td><strong>61.2</strong></td>
+      <td>54.1</td><td><strong>73.2</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- ░░░ BibTeX ░░░ -->
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-<pre><code>@article{german2025leximark,
-  title={LexiMark: Robust Watermarking via Lexical Substitutions to Enhance Membership Verification of an LLM’s Textual Training Data},
-  author={German, Eyal and Antebi, Sagiv and Habler, Edan and Shabtai, Asaf and Elovici, Yuval},
-  journal={arXiv preprint arXiv:2506.14474},
-  year={2025}
+<pre><code>@misc{german2025leximarkrobustwatermarkinglexical,
+  title        = {LexiMark: Robust Watermarking via Lexical Substitutions to Enhance Membership Verification of an LLM's Textual Training Data},
+  author       = {Eyal German and Sagiv Antebi and Edan Habler and Asaf Shabtai and Yuval Elovici},
+  year         = {2025},
+  eprint       = {2506.14474},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CL},
+  url          = {https://arxiv.org/abs/2506.14474}
 }</code></pre>
   </div>
 </section>

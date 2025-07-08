@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="LexiMark is a robust watermarking technique that embeds subtle synonym substitutions into text to enhance membership-verification for LLM pre-training data.">
+  <meta name="keywords"
+        content="LexiMark, watermarking, membership-inference attack, pre-training data detection, large language models, privacy">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LexiMark — Robust Watermarking for LLM Pre-training Verification</title>
+
+  <!-- ⚠ OPTIONAL: add your own Google-Analytics tag or remove this block entirely. -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXX-X');
+  </script>
+  -->
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- ░░░ Navbar ░░░ -->
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://sagivantebi.com">
+        <span class="icon"><i class="fas fa-home"></i></span>
+      </a>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">More&nbsp;Research</a>
+        <div class="navbar-dropdown">
+          <!-- Update or remove as you wish -->
+          <a class="navbar-item" href="https://arxiv.org/abs/2401.09075">The Risk of Customized GPTs&nbsp;- 2024</a>
+          <a class="navbar-item" href="https://arxiv.org/abs/2501.08454">Tag&Tab&nbsp;- 2025</a>
+          <a class="navbar-item" href="#">TabMIA&nbsp;- 2025</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ░░░ Hero ░░░ -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">
+            LexiMark: Robust Watermarking via<br>
+            Lexical Substitutions to Enhance Membership<br>
+            Verification of an LLM’s Textual Training Data
+          </h1>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=MB6doTkAAAAJ">Eyal German</a><sup>1</sup>,</span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=j_WBtHIAAAAJ">Sagiv Antebi</a><sup>1</sup>,</span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=9zI29XgAAAAJ">Edan Habler</a><sup>1</sup>,</span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=k-J7GfgAAAAJ">Asaf Shabtai</a><sup>1</sup>,</span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=ruZDm9QAAAAJ">Yuval Elovici</a><sup>1</sup></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Ben-Gurion University of the Negev</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- arXiv -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2506.14474" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code repo -->
+              <span class="link-block">
+                <a href="https://github.com/eyalgerman/LexiMark" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span><span>Code</span>
+                </a>
+              </span>
+              <!-- PDF placeholder
+              <span class="link-block">
+                <a href="./static/pdfs/leximark_paper.pdf" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
+                </a>
+              </span> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░ Teaser ░░░ -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+    <figure class="image">
+      <img src="./static/images/leximark_method.jpg"
+          alt="LexiMark watermark-and-MIA workflow with key highlights"
+          style="max-width:100%; height:auto;">
+    </figure>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">LexiMark</span> embeds high-entropy synonym substitutions that LLMs memorize&nbsp;—
+        enabling reliable post-training membership verification without harming semantics.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░ Results carousel ░░░ -->
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <!-- Example item; duplicate or replace as needed -->
+        <div class="item">
+          <img src="./static/images/placeholder_result.jpg" alt="Example result" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░ Abstract ░░░ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>Large language models (LLMs) can be trained or fine-tuned on data obtained
+             without the owner’s consent. Verifying whether a specific LLM was trained on
+             particular data instances or an entire dataset is challenging. We present
+             <strong>LexiMark</strong>, a watermarking technique that replaces the top-K highest-entropy
+             words in each sentence with semantically appropriate synonyms of even higher
+             entropy. These subtle substitutions encourage memorization without degrading
+             text quality, enabling powerful <em>black-box</em> membership-inference attacks
+             post-training.</p>
+          <p>Across six datasets (BookMIA and five subsets of&nbsp;<em>The&nbsp;Pile</em>) and seven open-source
+             LLMs ranging from 160 M to 8 B parameters, LexiMark boosts AUROC by
+             2.5 – 25 pp over existing methods, preserves meaning
+             (≥ 0.95 cosine similarity on SBERT embeddings) and remains robust to synonym
+             removal, post-training adaptation and instruction-tuning.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░ Method ░░░ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Method</h2>
+        <div class="content has-text-justified">
+          <p><strong>LexiMark</strong> operates in two phases:</p>
+          <ul>
+            <li><strong>Watermark Embedding.</strong> For every sentence we (i) rank words by
+                corpus entropy, (ii) select the top-K, and (iii) substitute each with a
+                synonym that yields even higher entropy while retaining syntactic
+                correctness. Substitutions are blocked on stop-words and named entities.</li>
+            <li><strong>Watermark Detection.</strong> After the suspect model is trained, we run any
+                standard black-box MIA (e.g.&nbsp;Min-K++ 20%) on the <em>watermarked</em> tokens only.
+                The resulting likelihood gap yields state-of-the-art AUROC with as few as
+                six records.</li>
+          </ul>
+          <p>The approach is <em>stealthy</em> (no unnatural glyphs), <em>robust</em> (survives post-training
+             and mild edits) and <em>portable</em> (no auxiliary models required).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░ Results tables ░░░ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width has-text-centered">
+        <h2 class="title is-3">Fine-tuned Models — BookMIA</h2>
+        <figure class="image">
+          <!-- Replace with your real table/figure -->
+          <img src="./static/images/bookmia_results_placeholder.png" alt="BookMIA results">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width has-text-centered">
+        <h2 class="title is-3">Continued Pretraining — The Pile Subsets</h2>
+        <figure class="image">
+          <img src="./static/images/pile_results_placeholder.png" alt="The Pile results">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░ BibTeX ░░░ -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+<pre><code>@article{german2025leximark,
+  title={LexiMark: Robust Watermarking via Lexical Substitutions to Enhance Membership Verification of an LLM’s Textual Training Data},
+  author={German, Eyal and Antebi, Sagiv and Habler, Edan and Shabtai, Asaf and Elovici, Yuval},
+  journal={arXiv preprint arXiv:2506.14474},
+  year={2025}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+            Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            You are welcome to re-use the
+            <a href="https://github.com/nerfies/nerfies.github.io">original source
+            code</a>; please keep a link back to this page and remove the dummy
+            analytics snippet above.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
